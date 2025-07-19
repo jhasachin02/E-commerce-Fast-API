@@ -1,4 +1,5 @@
 import logging
+import os
 from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -7,11 +8,12 @@ from app.database import connect_to_mongo, close_mongo_connection
 from app.routers import products, orders
 from app.middleware import LoggingMiddleware, ErrorHandlingMiddleware
 
-# Configure logging
+# Configure logging for production
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
+logger = logging.getLogger(__name__)
 
 # Create FastAPI app instance
 app = FastAPI(
@@ -39,12 +41,17 @@ app.add_middleware(
 # Startup event - Connect to MongoDB
 @app.on_event("startup")
 async def startup_db_client():
+    logger.info("Starting FastAPI E-commerce application...")
+    logger.info(f"MongoDB URL configured: {'✅' if os.getenv('MONGODB_URL') else '❌'}")
     await connect_to_mongo()
+    logger.info("Application startup completed")
 
 # Shutdown event - Disconnect from MongoDB
 @app.on_event("shutdown")
 async def shutdown_db_client():
+    logger.info("Shutting down FastAPI application...")
     await close_mongo_connection()
+    logger.info("Application shutdown completed")
 
 # Include routers
 app.include_router(products.router, prefix="/api/v1/products", tags=["products"])
@@ -60,4 +67,6 @@ async def health_check():
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000) 
+    import os
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port) 
