@@ -99,9 +99,9 @@ async def get_product(product_id: str):
     """
     Get a specific product by ID.
     """
-    collection = get_collection("products")
-    
     try:
+        collection = await get_collection("products")
+        
         product = await collection.find_one({"_id": ObjectId(product_id)})
         if not product:
             raise HTTPException(
@@ -137,17 +137,14 @@ async def create_product(product: ProductCreate):
         HTTPException: If database operation fails
     """
     try:
-        collection = get_collection("products")
+        collection = await get_collection("products")
         
-        # Convert to ProductInDB for storage
-        product_in_db = ProductInDB(
-            name=product.name,
-            price=product.price,
-            sizes=product.sizes
-        )
-        
-        # Convert to dict for MongoDB insertion
-        product_data = product_in_db.dict(by_alias=True)
+        # Create document for MongoDB insertion (without id field)
+        product_data = {
+            "name": product.name,
+            "price": float(product.price),  # Convert Decimal to float for MongoDB
+            "sizes": [size.model_dump() for size in product.sizes]  # Use model_dump instead of dict
+        }
         
         # Insert the product data into the 'products' collection
         result = await collection.insert_one(product_data)
@@ -156,9 +153,12 @@ async def create_product(product: ProductCreate):
         return {"id": str(result.inserted_id)}
         
     except Exception as e:
+        import traceback
+        print(f"❌ Product creation error: {str(e)}")
+        print(f"❌ Traceback: {traceback.format_exc()}")
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail="Failed to create product"
+            detail=f"Failed to create product: {str(e)}"
         )
 
  

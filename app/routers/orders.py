@@ -53,7 +53,7 @@ def validate_object_id(object_id: str, field_name: str = "ID") -> ObjectId:
 async def fetch_product_details_batch(product_ids: List[str]) -> Dict[str, ProductDetailsInOrder]:
     """Fetch multiple product details in a single query for efficiency"""
     try:
-        products_collection = get_collection("products")
+        products_collection = await get_collection("products")
         
         # Convert string IDs to ObjectIds
         object_ids = []
@@ -87,7 +87,7 @@ async def fetch_product_details_batch(product_ids: List[str]) -> Dict[str, Produ
 async def fetch_product_details(product_id: str) -> Optional[ProductDetailsInOrder]:
     """Fetch single product details from database"""
     try:
-        products_collection = get_collection("products")
+        products_collection = await get_collection("products")
         product = await products_collection.find_one(
             {"_id": validate_object_id(product_id, "product ID")},
             {"_id": 1, "name": 1}  # Projection for efficiency
@@ -126,8 +126,8 @@ async def create_order(order: OrderCreate) -> Dict[str, str]:
         InvalidObjectIdError: If any product ID is invalid
     """
     try:
-        orders_collection = get_collection("orders")
-        products_collection = get_collection("products")
+        orders_collection = await get_collection("orders")
+        products_collection = await get_collection("products")
         
         # Calculate total price by fetching product prices
         order_items = []
@@ -196,7 +196,7 @@ async def get_order(order_id: str = Path(..., description="Order ID")):
         InvalidObjectIdError: If order ID is invalid
     """
     try:
-        collection = get_collection("orders")
+        collection = await get_collection("orders")
         
         # Validate order ID and fetch order
         order_object_id = validate_object_id(order_id, "order ID")
@@ -272,8 +272,8 @@ async def get_orders_by_user(
         HTTPException: If database operation fails
     """
     try:
-        orders_collection = get_collection("orders")
-        products_collection = get_collection("products")
+        orders_collection = await get_collection("orders")
+        products_collection = await get_collection("products")
         
         # Query the 'orders' collection, filtering by user_id
         query = {"userId": user_id}
