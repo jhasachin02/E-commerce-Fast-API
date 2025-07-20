@@ -2,6 +2,7 @@ import os
 from motor.motor_asyncio import AsyncIOMotorClient
 from typing import Optional
 from dotenv import load_dotenv
+import dns.resolver
 
 # Load environment variables
 load_dotenv()
@@ -10,6 +11,18 @@ load_dotenv()
 database_client: Optional[AsyncIOMotorClient] = None
 database_name: Optional[str] = None
 
+def configure_dns():
+    """
+    Configure DNS resolver to use reliable DNS servers (Google DNS).
+    This fixes MongoDB Atlas SRV record resolution timeouts.
+    """
+    try:
+        dns.resolver.default_resolver = dns.resolver.Resolver(configure=False)
+        dns.resolver.default_resolver.nameservers = ['8.8.8.8', '8.8.4.4', '1.1.1.1']
+        print("🔧 DNS configured to use Google DNS for MongoDB Atlas SRV resolution")
+    except Exception as e:
+        print(f"⚠️  DNS configuration warning: {e}")
+
 async def connect_to_mongo():
     """
     Connect to MongoDB using Motor async driver.
@@ -17,17 +30,20 @@ async def connect_to_mongo():
     """
     global database_client, database_name
     
+    # Configure DNS first to avoid SRV record resolution timeouts
+    configure_dns()
+    
     # Get MongoDB connection details from environment variables
     mongo_uri = os.getenv("MONGODB_URL", "mongodb://localhost:27017")
     database_name = os.getenv("DATABASE_NAME", "ecommerce")
     
     try:
-        # Create Motor client with timeout settings
+        # Create Motor client with extended timeout settings for cloud deployment
         database_client = AsyncIOMotorClient(
             mongo_uri,
-            serverSelectionTimeoutMS=5000,  # 5 second timeout
-            connectTimeoutMS=5000,
-            socketTimeoutMS=5000
+            serverSelectionTimeoutMS=30000,  # 30 second timeout for cloud environments
+            connectTimeoutMS=10000,          # 10 second connection timeout
+            socketTimeoutMS=10000            # 10 second socket timeout
         )
         
         # Test the connection

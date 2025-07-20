@@ -4,7 +4,7 @@ from fastapi import FastAPI, Request
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from app.database import connect_to_mongo, close_mongo_connection
+from app.database import connect_to_mongo, close_mongo_connection, configure_dns
 from app.routers import products, orders
 from app.middleware import LoggingMiddleware, ErrorHandlingMiddleware
 
@@ -42,6 +42,10 @@ app.add_middleware(
 @app.on_event("startup")
 async def startup_db_client():
     logger.info("🚀 Starting FastAPI E-commerce application...")
+    
+    # Configure DNS first for MongoDB Atlas SRV resolution
+    configure_dns()
+    
     logger.info(f"🔧 MongoDB URL configured: {'✅' if os.getenv('MONGODB_URL') else '❌'}")
     logger.info("🔄 Database connection will be established on first request")
     logger.info("✅ Application startup completed")

@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-Minimal startup script for Render deployment
-This ensures the app starts even if there are MongoDB connection issues
+Production startup script for deployment (Render/Railway)
+Includes DNS fixes for MongoDB Atlas connectivity
 """
 
 import os
@@ -11,6 +11,15 @@ from pathlib import Path
 
 # Add the current directory to Python path
 sys.path.insert(0, str(Path(__file__).parent))
+
+# Configure DNS for MongoDB Atlas SRV resolution (Cloud deployment fix)
+try:
+    import dns.resolver
+    dns.resolver.default_resolver = dns.resolver.Resolver(configure=False)
+    dns.resolver.default_resolver.nameservers = ['8.8.8.8', '8.8.4.4', '1.1.1.1', '1.0.0.1']
+    print("🔧 DNS configured for MongoDB Atlas SRV resolution")
+except Exception as e:
+    print(f"⚠️  DNS configuration warning: {e}")
 
 # Set up basic logging
 logging.basicConfig(
