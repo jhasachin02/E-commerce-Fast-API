@@ -2,6 +2,7 @@
 """
 Production startup script for deployment (Render/Railway)
 Includes DNS fixes for MongoDB Atlas connectivity
+Force Railway deployment update - 2024
 """
 
 import os
