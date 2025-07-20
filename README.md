@@ -2,7 +2,25 @@
 
 🚀 **A production-ready, modern e-commerce backend API built with FastAPI and MongoDB Atlas**
 
-[![Deploy Status](https://img.shields.io/badge/Deploy-Live-brightgreen)](https://e-commerce-fast-api-1.onrender.com)
+[![Deploy Status](https://img.shields.io/badge/Deploy-Live-brightgreen)](## 🚀 Deployment
+
+### **Current Deployments**
+
+#### **Primary: Render Platform**
+The application is deployed on **Render** with automatic deployments from the `master` branch.
+- **Live URL**: https://e-commerce-fast-api-1.onrender.com
+- **Platform**: Render (https://render.com)
+- **Runtime**: Python 3.11
+- **Start Command**: `python start.py`
+- **Auto Deploy**: Enabled from GitHub
+
+#### **Secondary: Railway Platform**
+Alternative deployment on **Railway** for redundancy and testing.
+- **Live URL**: https://web-production-5d772.up.railway.app  
+- **Platform**: Railway (https://railway.app)
+- **Runtime**: Python 3.11
+- **Auto Deploy**: Enabled from GitHub//e-commerce-fast-api-1.onrender.com)
+[![Railway Deploy](https://img.shields.io/badge/Railway-Live-brightgreen)](https://web-production-5d772.up.railway.app)
 [![API Docs](https://img.shields.io/badge/API-Documentation-blue)](https://e-commerce-fast-api-1.onrender.com/docs)
 [![Python](https://img.shields.io/badge/Python-3.11+-blue)](https://python.org)
 [![FastAPI](https://img.shields.io/badge/FastAPI-0.116+-green)](https://fastapi.tiangolo.com)
@@ -10,10 +28,17 @@
 
 ## 🌐 Live Deployment
 
+### **Primary Deployment (Render)**
 - **🔗 API Base URL**: https://e-commerce-fast-api-1.onrender.com
 - **📚 Interactive API Docs**: https://e-commerce-fast-api-1.onrender.com/docs  
 - **🏥 Health Check**: https://e-commerce-fast-api-1.onrender.com/health
 - **📖 Alternative Docs**: https://e-commerce-fast-api-1.onrender.com/redoc
+
+### **Alternative Deployment (Railway)**
+- **🔗 API Base URL**: https://web-production-5d772.up.railway.app
+- **📚 Interactive API Docs**: https://web-production-5d772.up.railway.app/docs  
+- **🏥 Health Check**: https://web-production-5d772.up.railway.app/health
+- **📖 Alternative Docs**: https://web-production-5d772.up.railway.app/redoc
 
 ## ✨ Features
 
@@ -107,14 +132,25 @@
 
 ### **Test the Live API**
 ```bash
-# Health Check
+# Health Check - Render
 curl https://e-commerce-fast-api-1.onrender.com/health
 
-# Get Products
+# Health Check - Railway  
+curl https://web-production-5d772.up.railway.app/health
+
+# Get Products - Render
 curl https://e-commerce-fast-api-1.onrender.com/api/v1/products/
 
-# Create Product
+# Get Products - Railway
+curl https://web-production-5d772.up.railway.app/api/v1/products/
+
+# Create Product - Render
 curl -X POST https://e-commerce-fast-api-1.onrender.com/api/v1/products/ \
+  -H "Content-Type: application/json" \
+  -d '{"name":"Test Product","price":29.99,"sizes":[{"size":"M","quantity":10}]}'
+
+# Create Product - Railway
+curl -X POST https://web-production-5d772.up.railway.app/api/v1/products/ \
   -H "Content-Type: application/json" \
   -d '{"name":"Test Product","price":29.99,"sizes":[{"size":"M","quantity":10}]}'
 ```
@@ -240,14 +276,31 @@ python test_mongodb.py
 
 ### **API Testing with cURL**
 ```bash
-# Test health endpoint
+# Test health endpoint - Render
 curl https://e-commerce-fast-api-1.onrender.com/health
 
-# Test products endpoint
+# Test health endpoint - Railway
+curl https://web-production-5d772.up.railway.app/health
+
+# Test products endpoint - Render
 curl https://e-commerce-fast-api-1.onrender.com/api/v1/products/
 
-# Create a product
+# Test products endpoint - Railway  
+curl https://web-production-5d772.up.railway.app/api/v1/products/
+
+# Create a product - Render
 curl -X POST https://e-commerce-fast-api-1.onrender.com/api/v1/products/ \
+  -H "Content-Type: application/json" \
+  -d '{
+    "name": "Sample Product",
+    "price": 19.99,
+    "sizes": [
+      {"size": "M", "quantity": 5}
+    ]
+  }'
+
+# Create a product - Railway
+curl -X POST https://web-production-5d772.up.railway.app/api/v1/products/ \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Sample Product",
@@ -349,8 +402,8 @@ The API is fully documented with OpenAPI/Swagger:
 ## 📞 Support
 
 - **GitHub Issues**: [Create an issue](https://github.com/jhasachin02/E-commerce-Fast-API/issues)
-- **Documentation**: [API Docs](https://e-commerce-fast-api-1.onrender.com/docs)
-- **Live Demo**: [Try the API](https://e-commerce-fast-api-1.onrender.com)
+- **Documentation**: [API Docs - Render](https://e-commerce-fast-api-1.onrender.com/docs) | [API Docs - Railway](https://web-production-5d772.up.railway.app/docs)
+- **Live Demo**: [Try the API - Render](https://e-commerce-fast-api-1.onrender.com) | [Try the API - Railway](https://web-production-5d772.up.railway.app)
 
 ## 📄 License
 
@@ -367,7 +420,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 **⭐ If you found this project helpful, please give it a star on GitHub!**
 
-**🚀 Ready to integrate with your frontend? Check out the [live API documentation](https://e-commerce-fast-api-1.onrender.com/docs)!**
+**🚀 Ready to integrate with your frontend? Check out the live API documentation: [Render](https://e-commerce-fast-api-1.onrender.com/docs) | [Railway](https://web-production-5d772.up.railway.app/docs)!**
 - **MongoDB** running locally or accessible remotely
 - **Git** for version control
 
