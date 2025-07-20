@@ -39,7 +39,7 @@ async def get_products(
         HTTPException: If database operation fails
     """
     try:
-        collection = get_collection("products")
+        collection = await get_collection("products")
         
         # Build query
         query = {}

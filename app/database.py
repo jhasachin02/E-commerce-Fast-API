@@ -51,19 +51,24 @@ async def close_mongo_connection():
         database_client.close()
         print("🔌 MongoDB connection closed")
 
-def get_database():
+async def get_database():
     """
-    Get the database instance.
+    Get the database instance with lazy connection.
     Returns the database object for use in routers.
     """
+    global database_client, database_name
+    
     if database_client is None:
-        raise RuntimeError("Database client not available. MongoDB connection failed during startup.")
+        await connect_to_mongo()
+    
+    if database_client is None:
+        raise RuntimeError("Database client not available. MongoDB connection failed.")
     
     return database_client[database_name]
 
-def get_collection(collection_name: str):
+async def get_collection(collection_name: str):
     """
-    Get a specific collection from the database.
+    Get a specific collection from the database with lazy connection.
     
     Args:
         collection_name (str): Name of the collection to retrieve
@@ -71,5 +76,9 @@ def get_collection(collection_name: str):
     Returns:
         Collection object
     """
-    database = get_database()
-    return database[collection_name] 
+    try:
+        database = await get_database()
+        return database[collection_name]
+    except Exception as e:
+        print(f"❌ Failed to get collection {collection_name}: {e}")
+        raise e 

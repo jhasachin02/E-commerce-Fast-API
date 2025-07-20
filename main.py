@@ -38,13 +38,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Startup event - Connect to MongoDB
+# Startup event - Connect to MongoDB (non-blocking)
 @app.on_event("startup")
 async def startup_db_client():
-    logger.info("Starting FastAPI E-commerce application...")
-    logger.info(f"MongoDB URL configured: {'✅' if os.getenv('MONGODB_URL') else '❌'}")
-    await connect_to_mongo()
-    logger.info("Application startup completed")
+    logger.info("🚀 Starting FastAPI E-commerce application...")
+    logger.info(f"🔧 MongoDB URL configured: {'✅' if os.getenv('MONGODB_URL') else '❌'}")
+    logger.info("🔄 Database connection will be established on first request")
+    logger.info("✅ Application startup completed")
 
 # Shutdown event - Disconnect from MongoDB
 @app.on_event("shutdown")
@@ -59,11 +59,23 @@ app.include_router(orders.router, prefix="/api/v1/orders", tags=["orders"])
 
 @app.get("/")
 async def root():
-    return {"message": "Welcome to E-Commerce Backend API"}
+    """Root endpoint with basic API information"""
+    return {
+        "message": "Welcome to E-Commerce Backend API",
+        "version": "1.0.0",
+        "docs": "/docs",
+        "health": "/health"
+    }
 
 @app.get("/health")
 async def health_check():
-    return {"status": "healthy", "message": "API is running"}
+    """Health check endpoint that works regardless of database status"""
+    return {
+        "status": "healthy",
+        "message": "API is running",
+        "timestamp": "2025-07-19",
+        "database": "connection will be tested on first request"
+    }
 
 if __name__ == "__main__":
     import uvicorn
