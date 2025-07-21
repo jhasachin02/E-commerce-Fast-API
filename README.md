@@ -143,9 +143,13 @@ git clone https://github.com/jhasachin02/E-commerce-Fast-API.git
 cd E-commerce-Fast-API
 ```
 
-2. **Install dependencies**
+2. **Set up development environment**
 ```bash
+# Install dependencies
 pip install -r requirements.txt
+
+# Or use Make for automated setup
+make setup
 ```
 
 2. **Install dependencies**
@@ -162,11 +166,15 @@ DATABASE_NAME=ecommerce
 
 4. **Run the application**
 ```bash
-# Using production startup script
-python start.py
+# Development mode with auto-reload
+make run
+# OR
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
 
-# Or using Uvicorn directly
-uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+# Production mode
+make run-prod
+# OR  
+python scripts/start.py
 ```
 
 5. **Access the API**
@@ -181,17 +189,19 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
 ### **Run Tests**
 ```bash
-# Run comprehensive test suite
-python comprehensive_test_suite.py
+# Run comprehensive test suite using the test runner
+python tests/run_all_tests.py
 
-# Test database connection
-python quick_mongo_test.py
+# Run specific test files
+python tests/test_mongodb.py
+python tests/test_render_deployment.py
+python tests/test_local_app.py
 
-# Test API endpoints
-python test_render_deployment.py
+# Run with pytest (requires: pip install pytest)
+pytest tests/ -v
 
-# Test local application
-python test_local_app.py
+# Quick test run
+make test-quick
 ```
 
 ### **Test Categories**
@@ -206,14 +216,12 @@ python test_local_app.py
 ```
 E-commerce-Fast-API/
 ├── 📄 main.py                     # FastAPI application entry point
-├── 📄 start.py                    # Production startup script with DNS fixes
 ├── 📄 requirements.txt            # Python dependencies
-├── 📄 render.yaml                 # Render deployment configuration
-├── 📄 Procfile                    # Alternative deployment config
-├── 📄 runtime.txt                 # Python version specification
+├── 📄 pytest.ini                 # Test configuration
+├── 📄 Makefile                    # Development commands
+├── 📄 .gitignore                  # Git ignore rules
 ├── 📄 README.md                   # This documentation
-├── 📄 TEST_REPORT.md              # Comprehensive test report
-├── 📁 app/
+├── � app/                        # Main application package
 │   ├── 📄 __init__.py            # Package initialization
 │   ├── 📄 config.py              # Application configuration
 │   ├── 📄 database.py            # MongoDB connection & DNS fixes
@@ -223,11 +231,28 @@ E-commerce-Fast-API/
 │       ├── 📄 __init__.py        # Router package init
 │       ├── 📄 products.py        # Product CRUD operations
 │       └── 📄 orders.py          # Order management
-├── 📁 tests/                      # Test files
-│   ├── 📄 comprehensive_test_suite.py
-│   ├── 📄 test_render_deployment.py
-│   ├── 📄 quick_mongo_test.py
-│   └── 📄 render_deployment_test.py
+├── 📁 tests/                      # Test suite (7 focused test files)
+│   ├── 📄 run_all_tests.py       # Master test runner
+│   ├── 📄 test_mongodb.py        # Database connection tests
+│   ├── 📄 test_local_app.py      # Local application tests
+│   ├── 📄 simple_mongodb_test.py # Simple MongoDB tests
+│   ├── 📄 test_render_deployment.py # Deployment tests
+│   ├── 📄 test_create_product.py # Product creation tests
+│   └── 📄 test_direct_functions.py # Direct function tests
+├── 📁 scripts/                    # Utility scripts (5 focused scripts)
+│   ├── 📄 start.py               # Production startup script
+│   ├── 📄 dev.py                 # Development server runner
+│   ├── 📄 demo_api.py            # Full API demonstration
+│   ├── 📄 api_format_demo.py     # API format examples
+│   └── 📄 mongodb_diagnostics.py # Database diagnostics
+├── 📁 deployment/                 # Deployment configurations
+│   ├── 📄 render.yaml            # Render deployment config
+│   ├── 📄 Procfile               # Heroku/Railway deployment
+│   ├── 📄 railway.json           # Railway specific config
+│   ├── 📄 runtime.txt            # Python version specification
+│   └── 📄 render_deployment_checklist.json
+├── 📁 docs/                       # Documentation
+│   └── 📄 TEST_REPORT.md         # Comprehensive test report
 └── 📄 .env                        # Environment variables (not in repo)
 ```
 
