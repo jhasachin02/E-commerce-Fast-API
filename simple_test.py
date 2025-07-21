@@ -6,7 +6,7 @@ Simple API Test - Basic Functionality Check
 import requests
 import json
 
-BASE_URL = "https://e-commerce-fast-api-1.onrender.com"
+BASE_URL = "https://e-commerce-fast-api-76pa.onrender.com"
 
 print("🎯 E-COMMERCE FASTAPI BACKEND - BASIC TEST")
 print("="*60)

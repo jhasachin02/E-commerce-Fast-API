@@ -11,7 +11,7 @@ def test_create_product_api():
     """Test the product creation endpoint"""
     
     # API endpoint
-    url = "https://e-commerce-fast-api-1.onrender.com/api/v1/products/"
+    url = "https://e-commerce-fast-api-76pa.onrender.com/api/v1/products/"
     
     # Input data (exactly as you requested)
     input_data = {
